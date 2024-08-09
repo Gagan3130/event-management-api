@@ -11,10 +11,12 @@ dotenv.config();
 const userRoutes = require("./src/routes/user.routes");
 const eventRoutes = require("./src/routes/events.routes")
 const connectDB = require("./src/config/db");
+const createInitialAdmin = require("./src/utils/createInitialAdmin")
 
 const app = express();
 const port = 4000;
 connectDB();
+createInitialAdmin()
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

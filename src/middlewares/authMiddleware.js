@@ -9,7 +9,7 @@ const authMiddleware = (req, res, next) => {
     const token = authHeader.split(" ")[1];
 
     if (!token)
-      res.status(403).json({
+      return res.status(403).json({
         error: "Access Denied",
         code: errorCodes.ACCESS_DENIED,
       });

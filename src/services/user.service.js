@@ -3,8 +3,8 @@ const { generateJwtToken } = require("../utils");
 
 class AuthService {
   async registerUser(body) {
-    const { email, name, password } = body;
-    const user = await User.create({ email, name, password });
+    const { email, name, password, role } = body;
+    const user = await User.create({ email, name, password, role });
     if (user) {
       return this.IssueToken(user);
     }
@@ -12,7 +12,6 @@ class AuthService {
 
   async findUserByEmail(email) {
     const user = await User.findOne({ email });
-    console.log(user,"user")
     return user;
   }
 
