@@ -1,4 +1,6 @@
 const Event = require("../models/events.model");
+const User = require("../models/user.model");
+const Email = require("../utils/email");
 
 class EventService {
   async registerNewEvent(body) {
@@ -32,6 +34,12 @@ class EventService {
       participants: { $elemMatch: { $eq: userId } },
     }).select("-participants");
     return events;
+  }
+
+ async sendEventRegistrationMail({userId}){
+    const user = await User.findOne({_id: userId})
+    const EmailService = new Email({ email: user.email, name: user.name })
+    EmailService.sendEventRegistrationMail()
   }
 }
 

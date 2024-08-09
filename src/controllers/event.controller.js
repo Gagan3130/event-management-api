@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler");
 const { EventServices } = require("../services/event.service");
 const { ConflictError, NotFoundError } = require("../utils/custom-error");
 const errorCodes = require("../utils/error-codes");
-const emailService = require("../email/email-service")
 
 const createNewEvent = asyncHandler(async (req, res) => {
   const { date, time, description, name } = req.body;
@@ -44,7 +43,7 @@ const updatingEventDetails = asyncHandler(async (req, res) => {
 });
 
 const eventRegistration = asyncHandler(async (req, res) => {
-  const { id, email } = req.user;
+  const { id } = req.user;
   const eventId = req.params.eventId;
   const eventExist = await EventServices.findEventByPropertyName({
     _id: eventId,
@@ -59,7 +58,7 @@ const eventRegistration = asyncHandler(async (req, res) => {
   const event = await EventServices.updateEventsDetails(eventId, {
     $addToSet: { participants: id },
   });
-  emailService.sendEventRegistrationMail({email, name: event.name })
+  await EventServices.sendEventRegistrationMail({userId: id})
   res.status(200).json({
     msg: "Registered Successfully",
     eventDetails: {
