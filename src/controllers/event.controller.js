@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { EventServices } = require("../services/event.service");
-const { ConflictError, NotFoundError } = require("../utils/custom-error");
+const { ConflictError, NotFoundError, ValidationError } = require("../utils/custom-error");
 const errorCodes = require("../utils/error-codes");
 
 const createNewEvent = asyncHandler(async (req, res) => {
@@ -54,6 +54,15 @@ const eventRegistration = asyncHandler(async (req, res) => {
       code: errorCodes.EVENT_NOT_FOUND,
     });
   }
+
+  if(eventExist.participants.includes(id)){
+    throw new ValidationError({
+        message: "Already registered",
+        code: errorCodes.VALIDATION_ERROR
+    })
+  }
+
+
 
   const event = await EventServices.updateEventsDetails(eventId, {
     $addToSet: { participants: id },
